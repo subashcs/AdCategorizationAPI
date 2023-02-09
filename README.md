@@ -5,3 +5,4 @@ Categorizes ads based on text content
  Text content
  
 ## Output
+Category of the text (post)
