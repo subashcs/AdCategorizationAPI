@@ -1,17 +1,14 @@
-from flask import Flask ,jsonify , request,json
+from flask import Flask, jsonify, request, json
 import pickle
-from nltk.corpus import stopwords
-
 import pandas as pd
 import numpy as np
-
 import nltk
-
 import re
+
+
 REPLACE_BY_SPACE_RE = re.compile('[/(){}\[\]\|@,;]')
 BAD_SYMBOLS_RE = re.compile('[^0-9a-z #+_]')
-
-STOPWORDS = set(stopwords.words('english'))
+STOPWORDS = set(nltk.corpus.stopwords.words('english'))
 
 #prepare text clean function
 
@@ -32,24 +29,25 @@ def clean_text(text):
 app = Flask(__name__)
 
 if __name__ == '__main__':
-    app.run(debug=True,host='0.0.0.0')
+    app.run(debug=True,host='0.0.0.0',port=4000)
 
 filename = 'finalized_model.sav'
 loaded_model = pickle.load(open(filename, 'rb'))
 
 @app.route('/')
 def hello_world():
-    return undefined
+    return None
 
 @app.route('/<content>')
 def show_user_profile(content):
-    # show the user profile for that user
-    str1 = ''.join(str(e) for e in content)
     ToPredict=clean_text(content)
     result = loaded_model.predict([ToPredict])
     res = ''.join(str(e) for e in result)
     return jsonify({"category":res})
 
+@app.route('/test')
+def testData():
+    return jsonify({"result":"success"})   
 
 @app.route('/classify',methods = ['POST'])
 def classify():
@@ -61,6 +59,4 @@ def classify():
     res = ''.join(str(e) for e in result)
     return jsonify({"category":res})
 
-@app.route('/test')
-def testData():
-    return jsonify({"result":"success"})    
+ 
